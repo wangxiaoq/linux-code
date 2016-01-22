@@ -1,4 +1,4 @@
-target=hrtimer-test.o
+target=hrtimer-test
 
 all: module
 
@@ -6,7 +6,7 @@ ifndef KERNEL_DIR
 KERNEL_DIR = /lib/modules/`uname -r`/build
 endif
 
-obj-m := $(target)
+obj-m := $(target).o
 
 .PHONY: module
 module:
@@ -27,13 +27,13 @@ clean:
 
 .PHONY: install
 install:
-	sudo insmod timer.ko
+	sudo insmod $(target).ko
 
 .PHONY: uninstall
 uninstall:
-	sudo rmmod timer.ko
+	sudo rmmod $(target).ko
 
 .PHONY: reload
 reload:
-	sudo rmmod timer.ko
-	sudo insmod timer.ko
+	sudo rmmod $(target).ko
+	sudo insmod $(target).ko
