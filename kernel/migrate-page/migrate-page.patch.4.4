@@ -1,0 +1,42 @@
+diff -urN linux-4.4/include/linux/migrate.h linux/include/linux/migrate.h
+--- linux-4.4/include/linux/migrate.h	2016-01-11 07:01:32.000000000 +0800
++++ linux/include/linux/migrate.h	2016-05-19 17:36:47.947880906 +0800
+@@ -28,6 +28,8 @@
+ 
+ #ifdef CONFIG_MIGRATION
+ 
++extern int isolate_lru_page(struct page *page);
++
+ extern void putback_movable_pages(struct list_head *l);
+ extern int migrate_page(struct address_space *,
+ 			struct page *, struct page *, enum migrate_mode);
+diff -urN linux-4.4/mm/migrate.c linux/mm/migrate.c
+--- linux-4.4/mm/migrate.c	2016-01-11 07:01:32.000000000 +0800
++++ linux/mm/migrate.c	2016-05-19 17:14:30.183928223 +0800
+@@ -63,6 +63,7 @@
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL(migrate_prep);
+ 
+ /* Do the necessary work of migrate_prep but not if it involves other CPUs */
+ int migrate_prep_local(void)
+@@ -1185,6 +1186,7 @@
+ 
+ 	return rc;
+ }
++EXPORT_SYMBOL(migrate_pages);
+ 
+ #ifdef CONFIG_NUMA
+ /*
+diff -urN linux-4.4/mm/vmscan.c linux/mm/vmscan.c
+--- linux-4.4/mm/vmscan.c	2016-01-11 07:01:32.000000000 +0800
++++ linux/mm/vmscan.c	2016-05-19 17:14:32.303928148 +0800
+@@ -1444,6 +1444,7 @@
+ 	}
+ 	return ret;
+ }
++EXPORT_SYMBOL(isolate_lru_page);
+ 
+ /*
+  * A direct reclaimer may isolate SWAP_CLUSTER_MAX pages from the LRU list and
