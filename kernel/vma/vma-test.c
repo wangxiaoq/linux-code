@@ -43,8 +43,6 @@ static int vma_test_mmap(struct file *filp, struct vm_area_struct *vma)
 	return ret;
 }
 
-char buf[64] = "hello\n";
-
 static ssize_t vma_test_read(struct file *filp, char __user *ubuf, size_t size, loff_t *pos)
 {
 	unsigned long vaddr = (unsigned long)pfn_to_kaddr(page_to_pfn(page));
