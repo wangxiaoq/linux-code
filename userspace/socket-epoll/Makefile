@@ -8,8 +8,6 @@ server.o: server.h util.h
 
 .PHONY : clean
 clean:
-#	if [ -e client.o ]; then rm client.o; fi
-#	if [ -e server.o ]; then rm server.o; fi
 	if [ ls *.o ] > /dev/null 2>&1; then rm *.o; fi
 	if [ -e client ]; then rm client; fi
 	if [ -e server ]; then rm server; fi
