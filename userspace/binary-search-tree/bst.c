@@ -113,7 +113,8 @@ bst_node_t *delete(int data, bst_node_t *tree)
                 tree = tree->right;
                 free(tmp);
             } else { /* nothing to do */
-                
+                free(tree);
+                tree = NULL;
             }
         }
     }
@@ -147,7 +148,7 @@ int main(int argc, char *argv[])
     in_order_traversal(tree);
     printf("\n");
 
-    tree = delete(3, tree);
+    tree = delete(6, tree);
 
     in_order_traversal(tree);
     printf("\n");
