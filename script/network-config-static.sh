@@ -146,10 +146,9 @@ iface ${net_interfaces[$net_choice]} inet static
 address $ip_addr
 netmask $net_mask
 gateway $gateway
-
-# This is an autoconfigured IPv6 interface
-iface ${net_interfaces[$net_choice]} inet6 auto
 EOF
+
+echo "nameserver $gateway" > /etc/resolv.conf
 
 /etc/init.d/networking restart
 fi
