@@ -123,8 +123,8 @@ IPV6_AUTOCONF=yes
 IPV6_DEFROUTE=yes
 IPV6_FAILURE_FATAL=no
 IPV6_ADDR_GEN_MODE=stable-privacy
-NAME=${net_interface[$net_choice]}
-DEVICE=${net_interface[$net_choice]}
+NAME=${net_interfaces[$net_choice]}
+DEVICE=${net_interfaces[$net_choice]}
 ONBOOT=yes
 IPADDR=$ip_addr
 PREFIX=$mask_num
@@ -133,6 +133,8 @@ DNS1=$gateway
 EOF
 
 service network restart
+
+route add default gw $gateway ${net_interfaces[$net_choice]} 2>/dev/null
 
 elif [[ $os == "ubuntu" ]]; then
 cat <<EOF> $config_file
