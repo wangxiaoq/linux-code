@@ -1,72 +1,103 @@
 #include <iostream>
-#include <ctime>
+#include <cmath>
+#include <vector>
 #include <limits>
-#include <stdexcept>
+#include <algorithm>
+#include <iterator>
 
-struct heap {
+class binheap {
 public:
-    heap(int cap)
-        : capacity(cap), size(0) {
-        arr = new int[capacity + 1];
-        arr[0] = std::numeric_limits<int>::min();
-    }
-    bool full() const { return size == capacity; }
-    bool empty() const { return size == 0; }
+    using size_type = std::vector<int>::size_type;
+    binheap() { vec.push_back(std::numeric_limits<int>::min()); }
+    binheap(const std::initializer_list<int> &il);
+    bool empty() const { return size() == 0; }
     void insert(int val);
     int delmin();
-
 private:
-    int capacity;
-    int size;
-    int *arr;
+    std::vector<int> vec;
+    size_type size() const { return vec.size() - 1; }
 };
 
-void heap::insert(int val)
+binheap::binheap(const std::initializer_list<int> &il)
+    : vec(1, std::numeric_limits<int>::min())
 {
-    if (full()) {
-        throw std::overflow_error("heap is full");
+    copy(il.begin(), il.end(), back_inserter(vec));
+    size_type s = size();
+    for (int i = s / 2; i > 0; --i) {
+        int val = vec[i];
+        int j = 0;
+        int child = 0;
+        for (j = i; j * 2 <= s; j = child) {
+            child = j * 2;
+            if (child + 1 <= s && vec[child + 1] < vec[child]) {
+                child++;
+            }
+
+            if (vec[child] < val) {
+                vec[j] = vec[child];
+            } else {
+                break;
+            }
+        }
+        vec[j] = val;
     }
-    int i = 0;
-    size++;
-    for (i = size; arr[i/2] > val; i /= 2) {
-        arr[i] = arr[i/2];
-    }
-    arr[i] = val;
 }
 
-int heap::delmin()
+void binheap::insert(int val)
 {
-    if (empty()) {
-        throw std::underflow_error("heap is empty");
+    vec.push_back(val);
+    size_type s = size();
+    int i = s;
+    for (; vec[i / 2] > val; i /= 2) {
+        vec[i] = vec[i / 2];
     }
-    int first = arr[1];
-    int last = arr[size--];
-    int child = 0;
+    vec[i] = val;
+}
+
+int binheap::delmin()
+{
+    size_type s = size();
+    int first = vec[1];
+    int last = vec[s];
+    vec.pop_back();
+    s = size();
     int i = 0;
-    for (i = 1; i * 2 <= size; i = child) {
+    int child = 0;
+    for (i = 1; i * 2 <= s; i = child) {
         child = i * 2;
-        if (child + 1 < size && arr[child + 1] < arr[child]) {
+        if (child + 1 <= s && vec[child + 1] < vec[child]) {
             child++;
         }
-        if (last > arr[child]) {
-            arr[i] = arr[child];
+
+        if (vec[child] < last) {
+            vec[i] = vec[child];
         } else {
             break;
         }
     }
-    arr[i] = last;
+    vec[i] = last;
     return first;
 }
 
 int main(int argc, char *argv[])
 {
-    heap h(100);
+    binheap heap;
     for (int i = 0; i < 100; ++i) {
-        h.insert(rand() % 100);
+        heap.insert(random() % 100);
     }
 
-	for (int i = 0; i < 100; ++i) {
-        std::cout << h.delmin() << " ";
+    for (int i = 0; i < 100; ++i) {
+        std::cout << heap.delmin() << " ";
     }
-    std::cout <<std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+    std::cout << std::endl;
+
+    binheap heap1({3,5,7,4,67,32,543,1,43,5567,98,22});
+    while (!heap1.empty()) {
+        std::cout << heap1.delmin() << " ";
+    }
+    std::cout << std::endl;
+
+    return 0;
 }
